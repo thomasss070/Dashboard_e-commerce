@@ -7,6 +7,7 @@ import ProductView from './pages/products/productsviews/productviews.jsx';
 import ProductCreate from './pages/products/productCreate/prodcutsCreate.jsx';
 import Profile from './pages/Profile/Profile.jsx';
 import NotFound from './pages/notFound/notFound.jsx';
+import Layout from "./componets/Layout/Layout";
 import './App.css';
 
 function App() {
@@ -20,10 +21,12 @@ function App() {
           <Route path="/products/:id" element={<ProductView />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/layout" element={<Layout><h1>Welcome to the Layout Page</h1></Layout>} />
         </Routes>
       </div>
     </Router>
   );
 }
-
 export default App;
+
+
