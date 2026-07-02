@@ -8,6 +8,8 @@ import ProductCreate from './pages/products/productCreate/prodcutsCreate.jsx';
 import Profile from './pages/Profile/Profile.jsx';
 import NotFound from './pages/notFound/notFound.jsx';
 import Layout from "./componets/Layout/Layout";
+import CategoriesList from './pages/categories/categorieslist/categorieslist.jsx';
+import CategoryView from './pages/categories/categoryview/categoryview.jsx';
 import './App.css';
 
 function App() {
@@ -20,6 +22,8 @@ function App() {
           <Route path="/products/new" element={<ProductCreate />} />
           <Route path="/products/:id" element={<ProductView />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/categories" element={<CategoriesList />} />
+          <Route path="/categories/:id" element={<CategoryView />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>

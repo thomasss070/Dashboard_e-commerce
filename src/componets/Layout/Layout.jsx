@@ -1,17 +1,23 @@
+
 import { useState } from "react";
 import "./Layout.css";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const closeSidebar = () => {
+    setSidebarOpen(false);
+  };
+
   return (
     <div className="layout">
+
       {/* Overlay mobile */}
       {sidebarOpen && (
         <div
           className="overlay"
-          onClick={() => setSidebarOpen(false)}
+          onClick={closeSidebar}
         />
       )}
 
@@ -21,37 +27,69 @@ function Layout({ children }) {
         <h2>MENU</h2>
 
         <nav className="sidebar-nav">
-          <Link to="/">Home</Link>
 
-          <Link to="/products">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+            onClick={closeSidebar}
+          >
+            Home
+          </NavLink>
+
+          <NavLink
+            to="/products"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+            onClick={closeSidebar}
+          >
             Productos
-          </Link>
+          </NavLink>
 
-          <Link to="/products/new">
-            Nuevo producto
-          </Link>
+          <NavLink
+            to="/categories"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+            onClick={closeSidebar}
+          >
+            Categorías
+          </NavLink>
 
-          <Link to="/profile">
+          <NavLink
+          to="/profile"
+          className={({ isActive }) =>
+            isActive ? "nav-link active nav-link-bottom" : "nav-link nav-link-bottom"
+          }
+          onClick={closeSidebar}
+          >
             Perfil
-          </Link>
+          </NavLink>
+
         </nav>
 
       </aside>
 
       {/* Main Area */}
       <main className="main-area">
+
         <header className="topbar">
+
           <button
             className="menu-btn"
             onClick={() => setSidebarOpen(true)}
           >
             ☰
           </button>
+
         </header>
 
         <div className="content">
           {children}
         </div>
+
       </main>
     </div>
   );

@@ -26,6 +26,11 @@ function App() {
           {/* 👤 Perfil del Usuario */}
           <Route path="/profile" element={<Profile />} />
 
+
+          {/* 📁 Gestión de Categorías */}
+          <Route path="/categories" element={<CategoriesList />} />
+          <Route path="/categories/:id" element={<CategoryView />} />
+
           {/* ⚠️ Ruta por defecto (Error 404) */}
           <Route path="*" element={<NotFound />} />
         </Routes>
