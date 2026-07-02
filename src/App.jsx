@@ -13,7 +13,7 @@ import './App.css';
 function App() {
   return (
     <Router>
-      <div className="app-container" style={{ padding: '20px' }}>
+      <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<ProductsList />} />
@@ -21,12 +21,13 @@ function App() {
           <Route path="/products/:id" element={<ProductView />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<NotFound />} />
-          <Route path="/layout" element={<Layout><h1>Welcome to the Layout Page</h1></Layout>} />
         </Routes>
-      </div>
+      </Layout>
     </Router>
   );
 }
+
 export default App;
+
 
 

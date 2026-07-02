@@ -25,6 +25,22 @@
 
   transition: transform 0.3s ease;
 }
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.sidebar-nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.sidebar-nav a:hover {
+  opacity: 0.8;
+}
 
 /* ======================
    MAIN AREA
@@ -55,7 +71,8 @@
 ====================== */
 
 .menu-btn {
-  display: none;
+  
+  display: block;
 
   border: none;
   background: transparent;
