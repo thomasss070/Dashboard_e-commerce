@@ -1,7 +1,6 @@
-
-
 import { useState } from "react";
 import "./Layout.css";
+import { Link } from "react-router-dom";
 
 function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -18,7 +17,25 @@ function Layout({ children }) {
 
       {/* Sidebar */}
       <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
-        <h2>SIDEBAR</h2>
+
+        <h2>MENU</h2>
+
+        <nav className="sidebar-nav">
+          <Link to="/">Home</Link>
+
+          <Link to="/products">
+            Productos
+          </Link>
+
+          <Link to="/products/new">
+            Nuevo producto
+          </Link>
+
+          <Link to="/profile">
+            Perfil
+          </Link>
+        </nav>
+
       </aside>
 
       {/* Main Area */}
