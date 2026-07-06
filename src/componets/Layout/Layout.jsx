@@ -3,7 +3,7 @@ import { useState } from "react";
 import "./Layout.css";
 import { NavLink } from "react-router-dom";
 
-function Layout({ children }) {
+function Layout({ children, user }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const closeSidebar = () => {
@@ -64,9 +64,9 @@ function Layout({ children }) {
             isActive ? "nav-link active nav-link-bottom" : "nav-link nav-link-bottom"
           }
           onClick={closeSidebar}
-          >
-            Perfil
-          </NavLink>
+        >
+          Perfil
+        </NavLink>
 
         </nav>
 
@@ -77,14 +77,18 @@ function Layout({ children }) {
 
         <header className="topbar">
 
-          <button
-            className="menu-btn"
-            onClick={() => setSidebarOpen(true)}
-          >
-            ☰
-          </button>
+  <button
+    className="menu-btn"
+    onClick={() => setSidebarOpen(true)}
+  >
+    ☰
+  </button>
 
-        </header>
+  <h1 className="greeting">
+    ¡Hola {user?.name || "Usuario"}!
+  </h1>
+
+</header>
 
         <div className="content">
           {children}

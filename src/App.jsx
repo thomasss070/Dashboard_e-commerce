@@ -12,6 +12,8 @@ import CategoriesList from './pages/categories/categorieslist/categorieslist.jsx
 import CategoryView from './pages/categories/categoryview/categoryview.jsx';
 import './App.css';
 
+
+
 function App() {
   return (
     <Router>
