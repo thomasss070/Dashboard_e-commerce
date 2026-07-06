@@ -13,6 +13,7 @@ function Layout({ children, user }) {
   return (
     <div className="layout">
 
+
       {/* Overlay mobile */}
       {sidebarOpen && (
         <div
