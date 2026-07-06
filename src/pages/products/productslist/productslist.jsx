@@ -39,13 +39,14 @@ function ProductsList() {
 
           <input
             type="text"
-             placeholder="🔍"
+            placeholder="🔍 Buscar..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
 
           <button onClick={() => navigate("/products/new")}>
-            Agregar Producto
+            <span className="icon">＋</span>
+            <span className="text">Agregar Producto</span>
           </button>
 
         </div>
