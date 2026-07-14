@@ -1,12 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './productviews.css';
+import { products } from '../../../data/productsprueba.js';
 
 function ProductView() {
 
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const product = products.find((p) => p.id === Number(id));
+
+  const [formData, setFormData] = useState({
+  name: product.name,
+  price: product.price,
+  stock: product.stock,
+  description: product.description,
+  store: product.store,
+  });
+
+  const handleChange = (e) => {
+  setFormData({
+    ...formData,
+    [e.target.name]: e.target.value,
+    });
+  };
+
+  if (!product) {
+    return <h2>Producto no encontrado.</h2>;
+  }
   return (
     <div>
 
@@ -26,27 +47,69 @@ function ProductView() {
 
       {/* INFO PRODUCTO */}
       <div className="product-info">
-        <h1>Nombre del producto</h1>
-        <p>Precio: $19.900</p>
-        <p>Stock: 999</p>
+        <h1>{product.name}</h1>
+        <p>Precio: ${product.price.toLocaleString()}</p>
+        <p>Stock: {product.stock}</p>
       </div>
 
       {/* FORM */}
       <div className="form">
 
-        <input placeholder="Nombre" />
-        <input placeholder="Valor" />
+        <input
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          placeholder="Nombre"
+        />
+
+        <input
+          name="price"
+          type="number"
+          value={formData.price}
+          onChange={handleChange}
+          placeholder="Valor"
+        />
 
         <div className="stock">
-          <button>-</button>
-          <span>1</span>
-          <button>+</button>
+          <button
+            onClick={() =>
+              setFormData({
+                ...formData,
+                stock: Math.max(0, formData.stock - 1),
+              })
+            }
+          >
+            -
+          </button>
+
+          <span>{formData.stock}</span>
+
+          <button
+            onClick={() =>
+              setFormData({
+                ...formData,
+                stock: formData.stock + 1,
+              })
+            }
+            >
+            +
+          </button>
         </div>
 
-        <textarea placeholder="Descripción" />
+        <textarea
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          placeholder="Descripción"
+        />
 
-        <select>
-          <option>Tienda</option>
+        <select
+          name="store"
+          value={formData.store}
+          onChange={handleChange}
+        >
+          <option value="Tienda A">Tienda A</option>
+          <option value="Tienda B">Tienda B</option>
         </select>
 
       </div>
@@ -56,8 +119,20 @@ function ProductView() {
         <input placeholder="Nueva imagen" />
       </div>
 
+       {/* BOTONES DE ACCIÓN */}
+    <div className="action-buttons">
+    <button className="save-btn">Guardar</button>
+    <button className="cancel-btn" onClick={() => navigate("/products")}>
+      Cancelar
+    </button>
     </div>
+
+    </div>
+    
   );
+   
+
+  
 }
 
 export default ProductView;
