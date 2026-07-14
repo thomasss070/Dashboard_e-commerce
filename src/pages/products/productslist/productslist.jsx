@@ -12,9 +12,9 @@ function ProductsList() {
   useEffect(() => {
 
     const fakeProducts = [
-      { id: 1, name: "Remera Nike" },
-      { id: 2, name: "Zapatillas Adidas" },
-      { id: 3, name: "Campera North Face" }
+      { id: 1, name: "Remera Nike", category: "Ropa" },
+      { id: 2, name: "Zapatillas Adidas", category: "Calzado" },
+      { id: 3, name: "Campera North Face", category: "Ropa" }
     ];
 
     setProducts(fakeProducts);
@@ -23,7 +23,8 @@ function ProductsList() {
 
   // 🔥 FILTRO BIEN HECHO (AQUÍ VA)
   const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(search.toLowerCase())
+    product.name.toLowerCase().includes(search.toLowerCase()) ||
+    product.category.toLowerCase().includes(search.toLowerCase())
     
   );
 
@@ -39,13 +40,14 @@ function ProductsList() {
 
           <input
             type="text"
-             placeholder="🔍"
+            placeholder="🔍 Buscar..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
 
           <button onClick={() => navigate("/products/new")}>
-            Agregar Producto
+            <span className="icon">＋</span>
+            <span className="text">Agregar Producto</span>
           </button>
 
         </div>
@@ -54,8 +56,8 @@ function ProductsList() {
 
       {/* LISTA */}
       <div className="products-list">
-
-        {filteredProducts.map(product => (
+      {filteredProducts.length > 0 ? (
+        filteredProducts.map((product) => (
           <div
             key={product.id}
             className="product-card"
@@ -63,8 +65,12 @@ function ProductsList() {
           >
             <h3>{product.name}</h3>
           </div>
-        ))}
-
+        ))
+      ) : (
+        search.trim() !== "" && (
+          <p className="no-results">No se encontraron productos.</p>
+        )
+      )}
       </div>
 
     </div>

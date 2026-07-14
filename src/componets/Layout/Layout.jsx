@@ -2,12 +2,33 @@
 import { useState } from "react";
 import "./Layout.css";
 import { NavLink } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 function Layout({ children, user }) {
+  const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const closeSidebar = () => {
     setSidebarOpen(false);
+  };
+
+  const getTitle = () => {
+    switch (location.pathname) {
+      case "/":
+        return `¡Hola ${user?.name || "Usuario"}!`;
+      case "/products":
+        return "Productos";
+      case "/products/new":
+        return "Crear Producto";
+      case "/products/:id":
+        return "Vista del Producto";
+      case "/profile":
+        return "Mi Perfil";
+      case "/categories":
+        return "Categorías";
+      default:
+        return "Panel";
+    }
   };
 
   return (
@@ -78,6 +99,8 @@ function Layout({ children, user }) {
 
         <header className="topbar">
 
+          
+
   <button
     className="menu-btn"
     onClick={() => setSidebarOpen(true)}
@@ -86,7 +109,7 @@ function Layout({ children, user }) {
   </button>
 
   <h1 className="greeting">
-    ¡Hola {user?.name || "Usuario"}!
+    {getTitle()}
   </h1>
 
 </header>
