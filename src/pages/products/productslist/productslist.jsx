@@ -1,31 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './productslist.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./productslist.css";
+import { products as initialProducts } from "../../../data/productsprueba.js";
 
 function ProductsList() {
-
   const navigate = useNavigate();
 
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(initialProducts);
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-
-    const fakeProducts = [
-      { id: 1, name: "Remera Nike", category: "Ropa" },
-      { id: 2, name: "Zapatillas Adidas", category: "Calzado" },
-      { id: 3, name: "Campera North Face", category: "Ropa" }
-    ];
-
-    setProducts(fakeProducts);
-
-  }, []);
-
-  // 🔥 FILTRO BIEN HECHO (AQUÍ VA)
-  const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(search.toLowerCase()) ||
-    product.category.toLowerCase().includes(search.toLowerCase())
-    
+  const filteredProducts = products.filter(
+    (product) =>
+      product.name.toLowerCase().includes(search.toLowerCase()) ||
+      product.category.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
