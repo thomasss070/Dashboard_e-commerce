@@ -1,0 +1,132 @@
+body {
+  margin: 0;
+  background: #1f1f1f;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+/* CONTENEDOR GENERAL */
+.products-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* HEADER */
+.products-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 20px;
+}
+
+.products-header h1 {
+  font-size: 22px;
+  margin: 0;
+}
+
+/* ACCIONES */
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.actions input {
+  background: #2a2a2a;
+  border: 1px solid #444;
+  color: white;
+
+  padding: 8px 12px;
+  border-radius: 8px;
+  outline: none;
+}
+
+.actions button {
+  background: #3a3a3a;
+  border: none;
+  color: white;
+
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* LISTA */
+.products-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* CARD PRODUCTO */
+.product-card {
+  background: #2a2a2a;
+  padding: 15px;
+  border-radius: 12px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.product-card:hover {
+  background: #333;
+}
+
+.product-card h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.actions input {
+  width: 250px;
+  transition: width 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .actions input {
+    width: 40px;
+    padding: 8px;
+    cursor: pointer;
+  }
+
+  .actions input:focus {
+    width: 100%;
+  }
+
+  .actions input::placeholder {
+    text-align: center;
+  }
+
+  .actions input:focus::placeholder {
+    text-align: left;
+  }
+}
+
+.icon {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .text {
+    display: none;
+  }
+
+  .icon {
+    display: inline;
+    font-size: 20px;
+  }
+
+  .actions button {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
