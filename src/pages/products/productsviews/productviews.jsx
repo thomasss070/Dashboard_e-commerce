@@ -1,60 +1,117 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './productviews.css';
-import { products } from '../../../data/productsprueba.js';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 function ProductView() {
-
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const product = products.find((p) => p.id === Number(id));
-
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
-  name: product.name,
-  price: product.price,
-  stock: product.stock,
-  description: product.description,
-  store: product.store,
+    name: '',
+    price: 0,
+    stock: 0,
+    description: '',
   });
 
+  // 1. Obtener los datos del producto desde la base de datos al cargar
+  useEffect(() => {
+    fetch(`${API_URL}/products/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Producto no encontrado');
+        return res.json();
+      })
+      .then((data) => {
+        setFormData({
+          name: data.name || data.nombre || '',
+          price: data.price || data.precio || 0,
+          stock: data.stock || 0,
+          description: data.description || data.descripcion || '',
+          store: data.store || 'Tienda A',
+        });
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error al cargar el producto:', err);
+        setLoading(false);
+      });
+  }, [id]);
+
   const handleChange = (e) => {
-  setFormData({
-    ...formData,
-    [e.target.name]: e.target.value,
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
     });
   };
 
-  if (!product) {
-    return <h2>Producto no encontrado.</h2>;
+  // 2. Función para actualizar el producto (PUT)
+  const handleSave = async () => {
+    try {
+      const res = await fetch(`${API_URL}/products/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (res.ok) {
+        alert('Producto actualizado con éxito');
+        navigate('/products');
+      } else {
+        alert('Error al actualizar el producto');
+      }
+    } catch (error) {
+      console.error('Error al guardar:', error);
+    }
+  };
+
+  // 3. Función para eliminar el producto (DELETE)
+  const handleDelete = async () => {
+    if (!window.confirm('¿Estás seguro de que deseas eliminar este producto?')) return;
+
+    try {
+      const res = await fetch(`${API_URL}/products/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (res.ok) {
+        alert('Producto eliminado');
+        navigate('/products');
+      } else {
+        alert('Error al eliminar el producto');
+      }
+    } catch (error) {
+      console.error('Error al borrar:', error);
+    }
+  };
+
+  if (loading) {
+    return <h2 style={{ padding: '20px' }}>Cargando producto...</h2>;
   }
+
   return (
     <div>
-
-      {/* HEADER */}
+      {/* ENCABEZADO */}
       <div className="pv-header">
-
         <h2>Productos &gt; #{id}</h2>
 
-        <button
-          className="delete-btn"
-          onClick={() => navigate("/products")}
-        >
+        <button className="delete-btn" onClick={handleDelete}>
           Eliminar
         </button>
-
       </div>
 
-      {/* INFO PRODUCTO */}
+      {/* INFORMACIÓN DEL PRODUCTO */}
       <div className="product-info">
-        <h1>{product.name}</h1>
-        <p>Precio: ${product.price.toLocaleString()}</p>
-        <p>Stock: {product.stock}</p>
+        <h1>{formData.name}</h1>
+        <p>Precio: ${Number(formData.price).toLocaleString()}</p>
+        <p>Stock: {formData.stock}</p>
       </div>
 
-      {/* FORM */}
+      {/* FORMULARIO DE EDICIÓN */}
       <div className="form">
-
         <input
           name="name"
           value={formData.name}
@@ -72,10 +129,11 @@ function ProductView() {
 
         <div className="stock">
           <button
+            type="button"
             onClick={() =>
               setFormData({
                 ...formData,
-                stock: Math.max(0, formData.stock - 1),
+                stock: Math.max(0, Number(formData.stock) - 1),
               })
             }
           >
@@ -85,13 +143,14 @@ function ProductView() {
           <span>{formData.stock}</span>
 
           <button
+            type="button"
             onClick={() =>
               setFormData({
                 ...formData,
-                stock: formData.stock + 1,
+                stock: Number(formData.stock) + 1,
               })
             }
-            >
+          >
             +
           </button>
         </div>
@@ -111,28 +170,24 @@ function ProductView() {
           <option value="Tienda A">Tienda A</option>
           <option value="Tienda B">Tienda B</option>
         </select>
-
       </div>
 
       {/* GALERÍA */}
       <div className="gallery">
-        <input placeholder="Nueva imagen" />
+        <input placeholder="Nueva imagen (URL)" />
       </div>
 
-       {/* BOTONES DE ACCIÓN */}
-    <div className="action-buttons">
-    <button className="save-btn">Guardar</button>
-    <button className="cancel-btn" onClick={() => navigate("/products")}>
-      Cancelar
-    </button>
+      {/* BOTONES DE ACCIÓN */}
+      <div className="action-buttons">
+        <button className="save-btn" onClick={handleSave}>
+          Guardar
+        </button>
+        <button className="cancel-btn" onClick={() => navigate('/products')}>
+          Cancelar
+        </button>
+      </div>
     </div>
-
-    </div>
-    
   );
-   
-
-  
 }
 
 export default ProductView;

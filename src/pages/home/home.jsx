@@ -1,85 +1,97 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './home.css';
 
-function Home() {
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
+function Home() {
   const navigate = useNavigate();
 
-  const [products] = useState([
-    { id: 1 },
-    { id: 2 },
-    { id: 3 }
-  ]);
+  // Estados para guardar los totales
+  const [productsCount, setProductsCount] = useState(0);
+  const [categoriesCount, setCategoriesCount] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-  const [categories] = useState([
-    { id: 1 },
-    { id: 2 }
-  ]);
+  useEffect(() => {
+    // Petición para obtener los productos
+    const fetchProducts = fetch(`${API_URL}/products`).then((res) => res.json());
+
+    // Petición para obtener las categorías
+    const fetchCategories = fetch(`${API_URL}/categories`).then((res) => res.json());
+
+    // Ejecutamos ambas peticiones en paralelo
+    Promise.all([fetchProducts, fetchCategories])
+      .then(([productsData, categoriesData]) => {
+        if (Array.isArray(productsData)) {
+          setProductsCount(productsData.length);
+        }
+        if (Array.isArray(categoriesData)) {
+          setCategoriesCount(categoriesData.length);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error al cargar datos del Dashboard:', err);
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <div>
-
       <h1>🏠 Página de Inicio</h1>
       <p>Bienvenido al Dashboard del Ecommerce.</p>
 
       {/* CARD PRODUCTOS */}
       <div className="summary-card">
-
         <div className="left">
           <span className="icon">📦</span>
-
           <div>
-   <h3>{products.length} Productos</h3>
+            <h3>{loading ? 'Cargando...' : `${productsCount} Productos`}</h3>
           </div>
         </div>
 
         <div className="actions">
           <button
             className="btn secondary"
-            onClick={() => navigate("/products")}
+            onClick={() => navigate('/products')}
           >
             Ver listado
           </button>
 
           <button
             className="btn primary"
-            onClick={() => navigate("/products/new")}
+            onClick={() => navigate('/products/new')}
           >
             Agregar producto
           </button>
         </div>
-
       </div>
 
       {/* CARD CATEGORÍAS */}
       <div className="summary-card">
-
         <div className="left">
           <span className="icon">📁</span>
-
           <div>
-            <h3> {categories.length} Categorías</h3>
+            <h3>{loading ? 'Cargando...' : `${categoriesCount} Categorías`}</h3>
           </div>
         </div>
-         <div className="actions">
+
+        <div className="actions">
           <button
             className="btn secondary"
-            onClick={() => navigate("/categories")}
+            onClick={() => navigate('/categories')}
           >
             Ver listado
           </button>
 
           <button
             className="btn primary"
-            onClick={() => navigate("/categories/new")}
+            onClick={() => navigate('/categories/new')}
           >
             Agregar categoria
           </button>
         </div>
-
       </div>
-
     </div>
   );
 }
