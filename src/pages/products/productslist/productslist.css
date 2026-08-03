@@ -1,9 +1,4 @@
-body {
-  margin: 0;
-  background: #1f1f1f;
-  color: white;
-  font-family: Arial, sans-serif;
-}
+
 
 /* CONTENEDOR GENERAL */
 .products-page {
@@ -33,19 +28,19 @@ body {
 }
 
 .actions input {
-  background: #2a2a2a;
-  border: 1px solid #444;
-  color: white;
+  background:#d5d5d5;
 
+  border: 1px solid #ccc;
+  color: white;
   padding: 8px 12px;
   border-radius: 8px;
   outline: none;
 }
 
 .actions button {
-  background: #3a3a3a;
+  background: #c9c4c4;
   border: none;
-  color: white;
+  color: rgb(62, 58, 58);
 
   padding: 8px 14px;
   border-radius: 10px;
@@ -61,7 +56,7 @@ body {
 
 /* CARD PRODUCTO */
 .product-card {
-  background: #2a2a2a;
+  background: #d5d5d5;
   padding: 15px;
   border-radius: 12px;
 
@@ -74,7 +69,10 @@ body {
 }
 
 .product-card:hover {
-  background: #333;
+  background: #c0c0c0;
+  transition: 0.2s;
+
+
 }
 
 .product-card h3 {
@@ -84,6 +82,7 @@ body {
 
 .actions input {
   width: 250px;
+
   transition: width 0.3s ease;
 }
 

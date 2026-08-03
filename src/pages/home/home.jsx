@@ -11,6 +11,7 @@ function Home() {
   const [productsCount, setProductsCount] = useState(0);
   const [categoriesCount, setCategoriesCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [mensaje, setMensaje] = useState('');
 
   useEffect(() => {
     // Petición para obtener los productos
@@ -34,12 +35,22 @@ function Home() {
         console.error('Error al cargar datos del Dashboard:', err);
         setLoading(false);
       });
+
+    // Mensaje aleatorio de bienvenida
+    const mensajes = [
+      '¡Hola, te damos la bienvenida!',
+      '¡Qué bueno verte de nuevo!',
+      '¡Explora las novedades de hoy!',
+      '¡Tu tienda lista para ti!',
+      '¡Encuentra lo que buscas hoy!'
+    ];
+    setMensaje(mensajes[Math.floor(Math.random() * mensajes.length)]);
   }, []);
 
   return (
-    <div>
-      <h1>🏠 Página de Inicio</h1>
-      <p>Bienvenido al Dashboard del Ecommerce.</p>
+    <div className="home-container">
+      <h1>Página de Inicio</h1>
+      <p id="mensaje-bienvenida">{mensaje}</p>
 
       {/* CARD PRODUCTOS */}
       <div className="summary-card">

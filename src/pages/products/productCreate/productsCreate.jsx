@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './productsCreate.css'; // O el archivo CSS que uses para los formularios
+import './productsCreate.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -13,6 +13,9 @@ function ProductsCreate() {
     stock: 0,
     descripcion: '',
     categoria: '',
+    imagen: '',
+    especificaciones: '',
+    flag: '',
   });
 
   const [loading, setLoading] = useState(false);
@@ -31,13 +34,39 @@ function ProductsCreate() {
     setLoading(true);
     setError(null);
 
-    // Mapeamos los datos asegurando los tipos correctos
+    // 1. Formateamos las especificaciones ingresadas
+    let specsToSave = null;
+    if (formData.especificaciones && formData.especificaciones.trim() !== '') {
+      const lineas = formData.especificaciones.split('\n');
+      const specsObject = {};
+
+      lineas.forEach((linea) => {
+        const partes = linea.split(':');
+        if (partes.length >= 2) {
+          const clave = partes[0].trim();
+          const valor = partes.slice(1).join(':').trim();
+          if (clave) {
+            specsObject[clave] = valor;
+          }
+        }
+      });
+
+      if (Object.keys(specsObject).length > 0) {
+        specsToSave = JSON.stringify(specsObject);
+      } else {
+        specsToSave = formData.especificaciones.trim();
+      }
+    }
+
     const productToSend = {
-      nombre: formData.name,
-      precio: Number(formData.price),
+      nombre: formData.nombre,
+      precio: Number(formData.precio),
       stock: Number(formData.stock),
-      descripcion: formData.description,
-      categoria: formData.category,
+      descripcion: formData.descripcion,
+      categoria: formData.categoria,
+      imagen: formData.imagen,
+      especificaciones: specsToSave,
+      flag: formData.flag,
     };
 
     try {
@@ -53,10 +82,7 @@ function ProductsCreate() {
         throw new Error('No se pudo crear el producto');
       }
 
-      const data = await res.json();
       alert('¡Producto creado con éxito!');
-      
-      // Redireccionamos al listado de productos
       navigate('/products');
     } catch (err) {
       console.error('Error al crear el producto:', err);
@@ -84,10 +110,10 @@ function ProductsCreate() {
             <strong>Nombre del producto:</strong>
             <input
               type="text"
-              name="name"
-              value={formData.name}
+              name="nombre"
+              value={formData.nombre}
               onChange={handleChange}
-              placeholder="Ej: Iphone 14 Pro Max"
+              placeholder="Ej: iPhone 14 Pro Max"
               required
             />
           </label>
@@ -96,8 +122,8 @@ function ProductsCreate() {
             <strong>Precio:</strong>
             <input
               type="number"
-              name="price"
-              value={formData.price}
+              name="precio"
+              value={formData.precio}
               onChange={handleChange}
               placeholder="Ej: 15000"
               required
@@ -137,20 +163,42 @@ function ProductsCreate() {
             <strong>Categoría:</strong>
             <input
               type="text"
-              name="category"
-              value={formData.category}
+              name="categoria"
+              value={formData.categoria}
               onChange={handleChange}
-              placeholder="Ej: Iphone"
+              placeholder="Ej: Celulares"
+            />
+          </label>
+
+          <label>
+            <strong>URL de la Imagen:</strong>
+            <input
+              type="text"
+              name="imagen"
+              value={formData.imagen}
+              onChange={handleChange}
+              placeholder="Ej: https://via.placeholder.com/150"
             />
           </label>
 
           <label>
             <strong>Descripción:</strong>
             <textarea
-              name="description"
-              value={formData.description}
+              name="descripcion"
+              value={formData.descripcion}
               onChange={handleChange}
               placeholder="Descripción del producto..."
+              rows={4}
+            />
+          </label>
+
+          <label>
+            <strong>Especificaciones (clave: valor):</strong>
+            <textarea
+              name="especificaciones"
+              value={formData.especificaciones}
+              onChange={handleChange}
+              placeholder={'pantalla: Super Retina XDR\nprocesador: Chip A19\ncamara: 48 MP'}
               rows={4}
             />
           </label>
@@ -172,6 +220,6 @@ function ProductsCreate() {
       </form>
     </div>
   );
-}
+} 
 
 export default ProductsCreate;

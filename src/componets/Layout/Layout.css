@@ -1,4 +1,3 @@
-
 * {
   margin: 0;
   padding: 0;
@@ -9,6 +8,14 @@
   display: flex;
   min-height: 100vh;
   position: relative;
+  background-color: #f5f5f7; /* Gris claro icónico de Apple */
+  color: #1d1d1f;
+  font-family:-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #1d1d1f;
+  margin: 0;
 }
 
 /* ======================
@@ -16,12 +23,13 @@
 ====================== */
 
 .sidebar {
-  width: 296px;
-  min-width: 296px;
+  width: 280px;
+  min-width: 280px;
   height: 100vh;
-  background-color: #7a7a7a;
-  padding: 24px;
-  transition: transform 0.3s ease;
+  background-color: #ffffff;
+  padding: 24px 16px;
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
   display: flex;
   flex-direction: column;
 }
@@ -29,42 +37,39 @@
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-top: 24px;
+  gap: 6px;
+  margin-top: 20px;
   flex: 1;
 }
 
-/* CORRECCIÓN AQUÍ: Agrupamos los estilos base del link.
-  Evitamos usar ".sidebar-nav a" para no romper el color más adelante.
-*/
 .nav-link {
-  color: white;
+  color: #515154;
   text-decoration: none;
-  font-size: 16px;
-  padding: 12px 16px;
-  border-radius: 8px;
-  transition: 0.2s;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 14px;
+  border-radius: 10px;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  letter-spacing: -0.01em;
 }
 
 .nav-link:hover {
-  background: rgba(255,255,255,0.1);
-  opacity: 0.8;
+  background-color: #f5f5f7;
+  color: #1d1d1f;
 }
 
-/* ESTADO ACTIVO GLOBAL: Funciona en cualquier tamaño de pantalla
-*/
+/* ESTADO ACTIVO ESTILO APPLE */
 .nav-link.active {
-  background: white;
-  color: #111827 !important; /* El !important asegura que ningún otro estilo lo pise */
-  font-weight: bold;
+  background-color: #0071e3 !important; /* Azul distintivo de Apple */
+  color: #ffffff !important;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 113, 227, 0.25);
 }
 
 .nav-link-bottom {
-  order: 999;       /* Se asegura de ser el último elemento visualmente */
-  margin-top: auto; /* Empuja el botón al fondo absorbiendo el espacio libre */
+  order: 999;
+  margin-top: auto;
 }
-
-
 
 /* ======================
    MAIN AREA
@@ -73,45 +78,43 @@
 .main-area {
   flex: 1;
   height: 100vh;
-
   display: flex;
   flex-direction: column;
-
   overflow: hidden;
+  background-color: #f5f5f7;
 }
 
 /* HEADER */
 
 .topbar {
-  height: 72px;
-  min-height: 72px;
-
-  background: #7a7a7a;
-  border-bottom: 1px solid #ddd;
-
+  height: 64px;
+  min-height: 64px;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px); /* Efecto cristalino / Glassmorphism */
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
-
-  padding: 0 20px;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 4;
 }
 
-
-.greeting{
-  margin: 0 0 0 20px;
-  color: white;
-  font-size: 28px;
+.greeting {
+  margin: 0 0 0 16px;
+  color: #1d1d1f;
+  font-size: 22px;
   font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 /* CONTENT */
 
 .content {
   flex: 1;
-
   overflow-y: auto;
-
-  padding: 24px;
-
+  padding: 32px;
   background: transparent;
 }
 
@@ -120,14 +123,11 @@
 ====================== */
 
 .menu-btn {
-  
-  display: block;
+  display: none;
+}
 
-  border: none;
-  background: transparent;
-
-  font-size: 28px;
-  cursor: pointer;
+.menu-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 /* ======================
@@ -137,9 +137,9 @@
 .overlay {
   position: fixed;
   inset: 0;
-
-  background-color: rgba(0, 0, 0, 0.4);
-
+  background-color: rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   z-index: 5;
 }
 
@@ -152,10 +152,9 @@
     position: fixed;
     top: 0;
     left: 0;
-
     z-index: 10;
-
     transform: translateX(-100%);
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.12);
   }
 
   .sidebar.open {
@@ -167,36 +166,41 @@
   }
 
   .menu-btn {
-    display: block;
+    display: flex; /* O 'block', según prefieras */
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: rgb(62, 58, 58);
+    border: none;
+    font-size: 20px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
   }
 
-
-
   .sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 20px;
+  }
+
+  .nav-link {
+    color: #515154;
+    text-decoration: none;
+    padding: 10px 14px;
+    border-radius: 10px;
+    transition: 0.2s;
+  }
+
+  .nav-link:hover {
+    background-color: #f5f5f7;
+    color: #1d1d1f;
+  }
+
+  .nav-link.active {
+    background-color: #0071e3;
+    color: #ffffff;
+    font-weight: 600;
+  }
 }
-
-.nav-link {
-  color: white;
-  text-decoration: none;
-
-  padding: 12px 16px;
-  border-radius: 8px;
-
-  transition: 0.2s;
-}
-
-.nav-link:hover {
-  background: rgba(255,255,255,0.1);
-}
-
-.nav-link.active {
-  background: white;
-  color: #111827;
-  font-weight: bold;
-}
-}
-

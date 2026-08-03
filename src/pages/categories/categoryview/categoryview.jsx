@@ -108,17 +108,15 @@ function CategoryView() {
       </div>
 
       {/* FORMULARIO DE EDICIÓN */}
-      <div className="form">
-        <label style={{ display: 'block', marginBottom: '8px', color: '#ccc' }}>
-          Nombre de la Categoría:
-        </label>
-        <input
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          placeholder="Nombre de la categoría"
-        />
-      </div>
+<div className="form">
+  <label>Nombre de la Categoría:</label>
+  <input
+    name="name"
+    value={formData.name}
+    onChange={handleChange}
+    placeholder="Nombre de la categoría"
+  />
+</div>
 
       {/* BOTONES DE ACCIÓN */}
       <div className="action-buttons" style={{ marginTop: '20px' }}>

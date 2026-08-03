@@ -1,14 +1,16 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// Importación de Páginas
-import Home from './pages/home/home';
-import ProductsList from './pages/products/productsList/productslist';
-import ProductView from './pages/products/productview/productview';
-import ProductCreate from './pages/products/productCreate/productsCreate'; // La creamos en el Paso 2
-import Profile from './pages/Profile/Profile';                         // La creamos en el Paso 2
-import NotFound from './pages/notFound/notFound';                     // La creamos en el Paso 2
-import './App.css';
+// Importación de Páginas (rutas apuntando a `src`)
+import Home from './src/pages/home/home';
+import ProductsList from './src/pages/products/productslist/productslist';
+import ProductView from './src/pages/products/productsviews/productviews';
+import ProductCreate from './src/pages/products/productCreate/productsCreate'; // La creamos en el Paso 2
+import Profile from './src/pages/Profile/Profile';                         // La creamos en el Paso 2
+import NotFound from './src/pages/notFound/notFound';                     // La creamos en el Paso 2
+import CategoriesList from './src/pages/categories/categorieslist/categorieslist';
+import CategoryView from './src/pages/categories/categoryview/categoryview';
+import './src/App.css';
 
 function App() {
   return (

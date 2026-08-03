@@ -9,14 +9,20 @@ function ProductView() {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
+
+  // 1. Estado unificado
   const [formData, setFormData] = useState({
-    name: '',
-    price: 0,
+    nombre: '',
+    precio: 0,
     stock: 0,
-    description: '',
+    descripcion: '',
+    imagen: '',
+    especificaciones: '',
+    categoria: '',
+    flag: ''
   });
 
-  // 1. Obtener los datos del producto desde la base de datos al cargar
+  // 2. Cargar los datos del producto
   useEffect(() => {
     fetch(`${API_URL}/products/${id}`)
       .then((res) => {
@@ -24,12 +30,39 @@ function ProductView() {
         return res.json();
       })
       .then((data) => {
+        let specsText = '';
+
+        // CASO A: Viene como un Objeto JavaScript (gracias al parseo del Backend)
+        if (typeof data.especificaciones === 'object' && data.especificaciones !== null) {
+          specsText = Object.entries(data.especificaciones)
+            .map(([key, val]) => `${key}: ${val}`)
+            .join('\n');
+        } 
+        // CASO B: Viene como un String JSON plano (ej: '{"pantalla":"Retina"}')
+        else if (typeof data.especificaciones === 'string' && data.especificaciones.trim().startsWith('{')) {
+          try {
+            const parsed = JSON.parse(data.especificaciones);
+            specsText = Object.entries(parsed)
+              .map(([key, val]) => `${key}: ${val}`)
+              .join('\n');
+          } catch (e) {
+            specsText = data.especificaciones;
+          }
+        } 
+        // CASO C: Texto plano o vacío
+        else {
+          specsText = data.especificaciones || '';
+        }
+
         setFormData({
-          name: data.name || data.nombre || '',
-          price: data.price || data.precio || 0,
+          nombre: data.nombre || data.name || '',
+          precio: data.precio || data.price || 0,
           stock: data.stock || 0,
-          description: data.description || data.descripcion || '',
-          store: data.store || 'Tienda A',
+          descripcion: data.descripcion || data.description || '',
+          imagen: data.imagen || '',
+          especificaciones: specsText,
+          categoria: data.categoria || '',
+          flag: data.flag || ''
         });
         setLoading(false);
       })
@@ -46,19 +79,54 @@ function ProductView() {
     });
   };
 
-  // 2. Función para actualizar el producto (PUT)
+  // 3. Guardar cambios (PUT)
   const handleSave = async () => {
     try {
+      let specsToSave = null;
+
+      if (formData.especificaciones && formData.especificaciones.trim() !== '') {
+        const lineas = formData.especificaciones.split('\n');
+        const specsObject = {};
+
+        lineas.forEach((linea) => {
+          const partes = linea.split(':');
+          if (partes.length >= 2) {
+            const clave = partes[0].trim();
+            const valor = partes.slice(1).join(':').trim();
+            if (clave) {
+              specsObject[clave] = valor;
+            }
+          }
+        });
+
+        if (Object.keys(specsObject).length > 0) {
+          specsToSave = JSON.stringify(specsObject);
+        } else {
+          specsToSave = formData.especificaciones.trim();
+        }
+      }
+
+      const payloadToSend = {
+        nombre: formData.nombre,
+        precio: Number(formData.precio),
+        stock: Number(formData.stock),
+        descripcion: formData.descripcion,
+        imagen: formData.imagen,
+        especificaciones: specsToSave,
+        categoria: formData.categoria,
+        flag: formData.flag
+      };
+
       const res = await fetch(`${API_URL}/products/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payloadToSend),
       });
 
       if (res.ok) {
-        alert('Producto actualizado con éxito');
+        alert('¡Producto actualizado con éxito!');
         navigate('/products');
       } else {
         alert('Error al actualizar el producto');
@@ -68,7 +136,7 @@ function ProductView() {
     }
   };
 
-  // 3. Función para eliminar el producto (DELETE)
+  // 4. Eliminar producto (DELETE)
   const handleDelete = async () => {
     if (!window.confirm('¿Estás seguro de que deseas eliminar este producto?')) return;
 
@@ -105,28 +173,31 @@ function ProductView() {
 
       {/* INFORMACIÓN DEL PRODUCTO */}
       <div className="product-info">
-        <h1>{formData.name}</h1>
-        <p>Precio: ${Number(formData.price).toLocaleString()}</p>
+        <h1>{formData.nombre}</h1>
+        <p>Precio: ${Number(formData.precio).toLocaleString()}</p>
         <p>Stock: {formData.stock}</p>
       </div>
 
       {/* FORMULARIO DE EDICIÓN */}
       <div className="form">
+        <label>Nombre:</label>
         <input
-          name="name"
-          value={formData.name}
+          name="nombre"
+          value={formData.nombre}
           onChange={handleChange}
-          placeholder="Nombre"
+          placeholder="Nombre del producto"
         />
 
+        <label>Precio:</label>
         <input
-          name="price"
+          name="precio"
           type="number"
-          value={formData.price}
+          value={formData.precio}
           onChange={handleChange}
-          placeholder="Valor"
+          placeholder="Precio"
         />
 
+        <label>Stock:</label>
         <div className="stock">
           <button
             type="button"
@@ -155,26 +226,34 @@ function ProductView() {
           </button>
         </div>
 
+        <label>Descripción:</label>
         <textarea
-          name="description"
-          value={formData.description}
+          name="descripcion"
+          value={formData.descripcion}
           onChange={handleChange}
           placeholder="Descripción"
+          rows={3}
         />
 
-        <select
-          name="store"
-          value={formData.store}
+        <label>Especificaciones:</label>
+        <textarea
+          name="especificaciones"
+          value={formData.especificaciones}
           onChange={handleChange}
-        >
-          <option value="Tienda A">Tienda A</option>
-          <option value="Tienda B">Tienda B</option>
-        </select>
+          placeholder="pantalla: Super Retina XDR&#10;procesador: Chip A19"
+          rows={4}
+        />
       </div>
 
-      {/* GALERÍA */}
+      {/* GALERÍA / IMAGEN */}
       <div className="gallery">
-        <input placeholder="Nueva imagen (URL)" />
+        <label>URL de Imagen:</label>
+        <input
+          name="imagen"
+          value={formData.imagen}
+          onChange={handleChange}
+          placeholder="URL de la imagen"
+        />
       </div>
 
       {/* BOTONES DE ACCIÓN */}
