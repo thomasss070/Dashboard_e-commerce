@@ -7,8 +7,10 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 function ProductView() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const productId = id && !Number.isNaN(Number(id)) ? Number(id) : null;
 
   const [loading, setLoading] = useState(true);
+  const [categorias, setCategorias] = useState([]);
 
   // 1. Estado unificado
   const [formData, setFormData] = useState({
@@ -18,11 +20,31 @@ function ProductView() {
     descripcion: '',
     imagen: '',
     especificaciones: '',
-    categoria: '',
+    categoria_id: '',
     flag: ''
   });
 
-  // 2. Cargar los datos del producto
+  // 2. Cargar lista de categorías disponibles
+  useEffect(() => {
+    fetch(`${API_URL}/categories`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Error al obtener categorías');
+        return res.json();
+      })
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setCategorias(data);
+        } else {
+          setCategorias([]);
+        }
+      })
+      .catch((err) => {
+        console.error('Error cargando categorías:', err);
+        setCategorias([]);
+      });
+  }, []);
+
+  // 3. Cargar los datos del producto
   useEffect(() => {
     fetch(`${API_URL}/products/${id}`)
       .then((res) => {
@@ -32,14 +54,11 @@ function ProductView() {
       .then((data) => {
         let specsText = '';
 
-        // CASO A: Viene como un Objeto JavaScript (gracias al parseo del Backend)
         if (typeof data.especificaciones === 'object' && data.especificaciones !== null) {
           specsText = Object.entries(data.especificaciones)
             .map(([key, val]) => `${key}: ${val}`)
             .join('\n');
-        } 
-        // CASO B: Viene como un String JSON plano (ej: '{"pantalla":"Retina"}')
-        else if (typeof data.especificaciones === 'string' && data.especificaciones.trim().startsWith('{')) {
+        } else if (typeof data.especificaciones === 'string' && data.especificaciones.trim().startsWith('{')) {
           try {
             const parsed = JSON.parse(data.especificaciones);
             specsText = Object.entries(parsed)
@@ -48,11 +67,13 @@ function ProductView() {
           } catch (e) {
             specsText = data.especificaciones;
           }
-        } 
-        // CASO C: Texto plano o vacío
-        else {
+        } else {
           specsText = data.especificaciones || '';
         }
+
+        // Extraer ID de categoría limpiando decimales como "999.0"
+        const rawCat = data.categoria_id ?? data.category_id ?? data.categoria;
+        const cleanCatId = rawCat !== undefined && rawCat !== null && rawCat !== '' ? parseInt(rawCat, 10) : '';
 
         setFormData({
           nombre: data.nombre || data.name || '',
@@ -61,7 +82,7 @@ function ProductView() {
           descripcion: data.descripcion || data.description || '',
           imagen: data.imagen || '',
           especificaciones: specsText,
-          categoria: data.categoria || '',
+          categoria_id: cleanCatId !== '' && !isNaN(cleanCatId) ? String(cleanCatId) : '',
           flag: data.flag || ''
         });
         setLoading(false);
@@ -73,13 +94,14 @@ function ProductView() {
   }, [id]);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  // 3. Guardar cambios (PUT)
+  // 4. Guardar cambios (PUT)
   const handleSave = async () => {
     try {
       let specsToSave = null;
@@ -106,14 +128,21 @@ function ProductView() {
         }
       }
 
+      // Parsear ID de categoría garantizando que sea entero
+      const parsedCatId = formData.categoria_id !== '' ? parseInt(formData.categoria_id, 10) : null;
+      const validCatId = parsedCatId !== null && !isNaN(parsedCatId) ? parsedCatId : null;
+
       const payloadToSend = {
-        nombre: formData.nombre,
+        id: productId,
+        product_id: productId,
+        nombre: formData.nombre.trim(),
         precio: Number(formData.precio),
         stock: Number(formData.stock),
         descripcion: formData.descripcion,
         imagen: formData.imagen,
         especificaciones: specsToSave,
-        categoria: formData.categoria,
+        categoria_id: validCatId,
+        category_id: validCatId,
         flag: formData.flag
       };
 
@@ -129,37 +158,38 @@ function ProductView() {
         alert('¡Producto actualizado con éxito!');
         navigate('/products');
       } else {
-        alert('Error al actualizar el producto');
+        const errorData = await res.json().catch(() => ({}));
+        console.error('Detalle del error del backend:', errorData);
+        alert(`Error al actualizar (${res.status}): ${errorData.error || 'Revisá la consola del servidor'}`);
       }
     } catch (error) {
       console.error('Error al guardar:', error);
     }
   };
 
-  // 4. Eliminar producto (DELETE)
-  const handleDelete = async () => {
-    if (!window.confirm('¿Estás seguro de que deseas eliminar este producto?')) return;
+  // 5. Eliminar producto (DELETE)
+ const handleDelete = async () => {
+  if (!window.confirm('¿Estás seguro de que deseas eliminar este producto?')) return;
 
-    try {
-      const res = await fetch(`${API_URL}/products/${id}`, {
-        method: 'DELETE',
-      });
+  try {
+    const res = await fetch(`${API_URL}/products/${id}`, {
+      method: 'DELETE',
+    });
 
-      if (res.ok) {
-        alert('Producto eliminado');
-        navigate('/products');
-      } else {
-        alert('Error al eliminar el producto');
-      }
-    } catch (error) {
-      console.error('Error al borrar:', error);
+    if (res.ok) {
+      alert('Producto eliminado');
+      navigate('/products');
+    } else {
+      // Leemos el mensaje enviado por la API
+      const errorData = await res.json().catch(() => ({}));
+      console.log('Status code:', res.status);
+      console.log('Respuesta del servidor:', errorData);
+      alert(`Error ${res.status}: ${errorData.error || errorData.message || 'Error al eliminar'}`);
     }
-  };
-
-  if (loading) {
-    return <h2 style={{ padding: '20px' }}>Cargando producto...</h2>;
+  } catch (error) {
+    console.error('Error de red o conexión:', error);
   }
-
+};
   return (
     <div>
       {/* ENCABEZADO */}
@@ -174,7 +204,7 @@ function ProductView() {
       {/* INFORMACIÓN DEL PRODUCTO */}
       <div className="product-info">
         <h1>{formData.nombre}</h1>
-        <p>Precio: ${Number(formData.precio).toLocaleString()}</p>
+        <p>Precio: ${Number(formData.precio || 0).toLocaleString()}</p>
         <p>Stock: {formData.stock}</p>
       </div>
 
@@ -187,6 +217,20 @@ function ProductView() {
           onChange={handleChange}
           placeholder="Nombre del producto"
         />
+
+        <label>Categoría:</label>
+        <select
+          name="categoria_id"
+          value={formData.categoria_id}
+          onChange={handleChange}
+        >
+          <option value="">-- Seleccionar Categoría --</option>
+          {categorias.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.nombre}
+            </option>
+          ))}
+        </select>
 
         <label>Precio:</label>
         <input

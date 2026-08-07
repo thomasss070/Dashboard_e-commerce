@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './productsCreate.css';
 
@@ -7,12 +7,13 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 function ProductsCreate() {
   const navigate = useNavigate();
 
+  const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     nombre: '',
     precio: '',
     stock: 0,
     descripcion: '',
-    categoria: '',
+    categoria_id: '',
     imagen: '',
     especificaciones: '',
     flag: '',
@@ -20,6 +21,23 @@ function ProductsCreate() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Cargar las categorías existentes para el select
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch(`${API_URL}/categories`);
+        if (res.ok) {
+          const data = await res.json();
+          setCategories(data);
+        }
+      } catch (err) {
+        console.error('Error al cargar categorías:', err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,7 +52,7 @@ function ProductsCreate() {
     setLoading(true);
     setError(null);
 
-    // 1. Formateamos las especificaciones ingresadas
+    // Formateamos las especificaciones como un objeto plano JS (sin doble JSON.stringify)
     let specsToSave = null;
     if (formData.especificaciones && formData.especificaciones.trim() !== '') {
       const lineas = formData.especificaciones.split('\n');
@@ -52,9 +70,7 @@ function ProductsCreate() {
       });
 
       if (Object.keys(specsObject).length > 0) {
-        specsToSave = JSON.stringify(specsObject);
-      } else {
-        specsToSave = formData.especificaciones.trim();
+        specsToSave = specsObject;
       }
     }
 
@@ -63,7 +79,7 @@ function ProductsCreate() {
       precio: Number(formData.precio),
       stock: Number(formData.stock),
       descripcion: formData.descripcion,
-      categoria: formData.categoria,
+      categoria_id: formData.categoria_id ? Number(formData.categoria_id) : null,
       imagen: formData.imagen,
       especificaciones: specsToSave,
       flag: formData.flag,
@@ -161,13 +177,19 @@ function ProductsCreate() {
 
           <label>
             <strong>Categoría:</strong>
-            <input
-              type="text"
-              name="categoria"
-              value={formData.categoria}
+            <select
+              name="categoria_id"
+              value={formData.categoria_id}
               onChange={handleChange}
-              placeholder="Ej: Celulares"
-            />
+              required
+            >
+              <option value="">-- Selecciona una categoría --</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.nombre || cat.name}
+                </option>
+              ))}
+            </select>
           </label>
 
           <label>
@@ -220,6 +242,6 @@ function ProductsCreate() {
       </form>
     </div>
   );
-} 
+}
 
 export default ProductsCreate;
