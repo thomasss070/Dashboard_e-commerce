@@ -1,0 +1,275 @@
+/* ==========================================
+   Apple Design System - Profile.css
+   ========================================== */
+
+/* Variables de Color y Estilos de Apple */
+:root {
+  --apple-bg: #f5f5f7;
+  --apple-card-bg: rgba(255, 255, 255, 0.8);
+  --apple-text-primary: #1d1d1f;
+  --apple-text-secondary: #86868b;
+  --apple-blue: #0071e3;
+  --apple-blue-hover: #0077ed;
+  --apple-red: #ff3b30;
+  --apple-red-hover: #e03228;
+  --apple-yellow: #ff9500;
+  --apple-yellow-hover: #e08300;
+  --apple-gray-btn: #e8e8ed;
+  --apple-gray-btn-hover: #d2d2d7;
+  --apple-border: rgba(0, 0, 0, 0.08);
+  --apple-radius-lg: 18px;
+  --apple-radius-md: 12px;
+  --apple-radius-sm: 8px;
+  --apple-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  --apple-shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.08);
+  --apple-transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Tipografía e Integración Global */
+body {
+  background-color: var(--apple-bg);
+  color: var(--apple-text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Contenedor Principal */
+.profile-container {
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 24px;
+}
+
+/* Encabezados */
+.profile-title {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--apple-text-primary);
+  margin-bottom: 6px;
+}
+
+.profile-subtitle {
+  font-size: 16px;
+  color: var(--apple-text-secondary);
+  margin-bottom: 32px;
+  font-weight: 400;
+}
+
+/* Formulario */
+.profile-form {
+  background: var(--apple-card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--apple-border);
+  border-radius: var(--apple-radius-lg);
+  padding: 24px;
+  margin-bottom: 32px;
+  box-shadow: var(--apple-shadow);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.profile-form input[type="text"],
+.profile-form input[type="email"],
+.profile-form select {
+  flex: 1 1 200px;
+  height: 42px;
+  padding: 0 14px;
+  font-size: 15px;
+  color: var(--apple-text-primary);
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: var(--apple-radius-md);
+  outline: none;
+  transition: var(--apple-transition);
+}
+
+.profile-form input:focus,
+.profile-form select:focus {
+  border-color: var(--apple-blue);
+  box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
+}
+
+.profile-form select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2386868B%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px top 50%;
+  background-size: 10px auto;
+  padding-right: 32px;
+}
+
+/* Botones Base */
+.btn {
+  height: 42px;
+  padding: 0 18px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: var(--apple-radius-md);
+  border: none;
+  cursor: pointer;
+  transition: var(--apple-transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background-color: var(--apple-blue);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: var(--apple-blue-hover);
+}
+
+.btn-secondary {
+  background-color: var(--apple-gray-btn);
+  color: var(--apple-text-primary);
+}
+
+.btn-secondary:hover {
+  background-color: var(--apple-gray-btn-hover);
+}
+
+/* Botones de la Tabla */
+.btn-view {
+  background-color: rgba(0, 113, 227, 0.08);
+  color: var(--apple-blue);
+  height: 32px;
+  padding: 0 12px;
+  font-size: 13px;
+  border-radius: var(--apple-radius-sm);
+}
+
+.btn-view:hover {
+  background-color: rgba(0, 113, 227, 0.16);
+}
+
+.btn-edit {
+  background-color: rgba(255, 149, 0, 0.08);
+  color: var(--apple-yellow);
+  height: 32px;
+  padding: 0 12px;
+  font-size: 13px;
+  border-radius: var(--apple-radius-sm);
+}
+
+.btn-edit:hover {
+  background-color: rgba(255, 149, 0, 0.16);
+}
+
+.btn-delete {
+  background-color: rgba(255, 59, 48, 0.08);
+  color: var(--apple-red);
+  height: 32px;
+  padding: 0 12px;
+  font-size: 13px;
+  border-radius: var(--apple-radius-sm);
+}
+
+.btn-delete:hover {
+  background-color: rgba(255, 59, 48, 0.16);
+}
+
+/* Tabla de Usuarios */
+.profile-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--apple-card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--apple-border);
+  border-radius: var(--apple-radius-lg);
+  box-shadow: var(--apple-shadow);
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.profile-table th {
+  background-color: rgba(250, 250, 252, 0.8);
+  color: var(--apple-text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 14px 20px;
+  text-align: left;
+  border-bottom: 1px solid var(--apple-border);
+}
+
+.profile-table td {
+  padding: 16px 20px;
+  font-size: 14px;
+  color: var(--apple-text-primary);
+  border-bottom: 1px solid var(--apple-border);
+  transition: var(--apple-transition);
+}
+
+.profile-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.profile-table tbody tr:hover td {
+  background-color: rgba(0, 0, 0, 0.015);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Modal / Detalles del Usuario (Card Flotante) */
+.user-details {
+  background: #ffffff;
+  border: 1px solid var(--apple-border);
+  border-radius: var(--apple-radius-lg);
+  padding: 24px;
+  box-shadow: var(--apple-shadow-hover);
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.user-details h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--apple-text-primary);
+}
+
+.user-details p {
+  font-size: 14px;
+  color: var(--apple-text-secondary);
+  margin-bottom: 10px;
+}
+
+.user-details p strong {
+  color: var(--apple-text-primary);
+  font-weight: 500;
+}
+
+.user-details .btn {
+  margin-top: 12px;
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
