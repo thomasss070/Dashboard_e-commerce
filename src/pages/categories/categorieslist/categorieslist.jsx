@@ -53,7 +53,7 @@ function CategoriesList() {
             onChange={(e) => setSearch(e.target.value)}
           />
 
-          <button onClick={() => navigate("/categories/new")}>
+          <button onClick={() => navigate("/categories/create")}>
             <span className="icon">＋</span>
             <span className="text">Agregar Categoría</span>
           </button>

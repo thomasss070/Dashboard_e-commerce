@@ -8,6 +8,7 @@
   justify-content: space-between;
   color: rgb(252, 249, 249);
   width: 100%;
+
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
@@ -84,4 +85,17 @@ h1 {
   opacity: 0.85;
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(119, 112, 112, 0.2);
+}
+
+@media (max-width: 768px) {
+  .summary-card .actions {
+    display: flex;
+    flex-direction: row;
+    gap: 30px; /* Aumenta el espacio horizontal entre botón y botón */
+    justify-content: space-between;
+  }
+  .summary-card .actions .btn {
+    font-size: 0.82rem;     /* Letra más pequeña para que quepan bien */
+    padding: 6px 10px;      /* Botones un poco más compactos */
+  }
 }

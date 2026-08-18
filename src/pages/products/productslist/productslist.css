@@ -108,6 +108,8 @@
 
 .icon {
   display: none;
+  color:#0071e3;
+  background: transparent;
 }
 
 @media (max-width: 768px) {

@@ -31,6 +31,7 @@ function App() {
 
           {/* 📁 Gestión de Categorías */}
           <Route path="/categories" element={<CategoriesList />} />
+          <Route path="/categories/create" element={<CategoryCreate />} />
           <Route path="/categories/:id" element={<CategoryView />} />
 
           {/* ⚠️ Ruta por defecto (Error 404) */}

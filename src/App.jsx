@@ -10,6 +10,7 @@ import NotFound from './pages/notFound/notFound.jsx';
 import Layout from "./componets/Layout/Layout";
 import CategoriesList from './pages/categories/categorieslist/categorieslist.jsx';
 import CategoryView from './pages/categories/categoryview/categoryview.jsx';
+import CategoryCreate from './pages/categories/categoryCreate/categoryCreate.jsx';
 import './App.css';
 
 
@@ -25,6 +26,7 @@ function App() {
           <Route path="/products/:id" element={<ProductView />} />   
           <Route path="/profile" element={<Profile />} />
           <Route path="/categories" element={<CategoriesList />} />
+          <Route path="/categories/create" element={<CategoryCreate />} />
           <Route path="/categories/:id" element={<CategoryView />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
