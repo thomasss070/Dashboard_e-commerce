@@ -19,9 +19,7 @@ export default function Users() {
     loadUsers();
   }, []);
 
-  // ==========================
-  // 🗃️ 1. Obtener lista de usuarios
-  // ==========================
+  //  Obtener lista de usuarios
   const loadUsers = async () => {
     try {
       const res = await fetch(API_URL);
@@ -33,9 +31,8 @@ export default function Users() {
     }
   };
 
-  // ==========================
-  // 👁️ 2. Ver detalles de un usuario
-  // ==========================
+  // Ver detalles de un usuario
+
   const handleViewDetails = async (id) => {
     try {
       const res = await fetch(`${API_URL}/${id}`);
@@ -47,9 +44,7 @@ export default function Users() {
     }
   };
 
-  // ==========================
-  // ➕ 3 y ✍🏻 4. Registrar / Modificar
-  // ==========================
+  //  Registrar / Modificar
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -103,9 +98,9 @@ export default function Users() {
     });
   };
 
-  // ==========================
-  // 🗑️ 5. Eliminar un usuario
-  // ==========================
+
+  // Eliminar un usuario
+  
   const handleDelete = async (id) => {
     if (!window.confirm("¿Seguro que deseas eliminar este usuario?")) return;
 

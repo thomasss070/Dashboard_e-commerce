@@ -2,39 +2,42 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./categorieslist.css";
 
-
-// Lee la URL definida en tu archivo .env (ejemplo: http://localhost:3001/api)
 const API_URL = import.meta.env.VITE_API_URL;
 
 function CategoriesList() {
 
   const navigate = useNavigate();
-
-  // El estado inicia vacío (se llenará desde la base de datos)
   const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // Obtiene las categorías reales cuando el componente se monta
-  useEffect(() => {
-    fetch(`${API_URL}/categories`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Error al obtener las categorías");
-        return res.json();
-      })
-      .then((data) => {
-        setCategories(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error al obtener las categorías:", err);
-        setLoading(false);
-      });
-  }, []);
 
-  const filteredCategories = categories.filter(
-    (category) =>
-      category.nombre.toLowerCase().includes(search.toLowerCase())
+useEffect(() => {
+     const getCategories = async () => { 
+    try {
+      const res = await fetch(`${API_URL}/categories`);
+
+      if (!res.ok) {
+        throw new Error("Error al obtener las categorías");
+      }
+
+      const data = await res.json();
+
+      setCategories(data);
+
+
+    } catch (err) {
+      console.error("Error al obtener las categorías:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  getCategories();
+}, []);
+
+  const filteredCategories = categories.filter( (category) => 
+    category.nombre.toLowerCase().includes(search.toLowerCase())
   );
 
 
@@ -64,6 +67,7 @@ function CategoriesList() {
       <div className="categories-list">
         {loading ? (
           <p>Cargando categorías...</p>
+          
         ) : filteredCategories.length > 0 ? (
             filteredCategories.map((category) => (
               <div
@@ -86,3 +90,12 @@ function CategoriesList() {
 
 export default CategoriesList;
 
+//“Es un componente de React que
+//  muestra las categorías. Al montarse 
+// realiza una petición GET al endpoint
+//  /categories mediante fetch. El backend 
+// devuelve las categorías en formato JSON,
+//  React las guarda en un estado mediante 
+// setCategories y luego las muestra con map. Además permite
+//  filtrarlas mediante un buscador y navegar hacia la creación 
+// o el detalle de una categoría.”

@@ -9,20 +9,20 @@ function CategoryCreate() {
   const navigate = useNavigate();
 
   const [saving, setSaving] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({ //formData → guarda los datos del formulario
     name: '',
     description: '',
   });
-
-  const handleChange = (e) => {
+   // handleChange → Maneja los cambios en los campos del formulario
+  const handleChange = (e) => { //e contiene el cambio en un campo del formulario
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
-
-  const handleSave = async (e) => {
-    e.preventDefault();
+//handleSave → Maneja el envío del formulario y la creación de la categoría
+  const handleSave = async (e) => { 
+    e.preventDefault(); // Evita que la página se recargue al enviar el formulario
 
     if (!formData.name.trim()) {
       alert('Por favor, ingresa el nombre de la categoría.');
@@ -40,11 +40,11 @@ function CategoryCreate() {
       };
 
       const res = await fetch(`${API_URL}/categories`, {
-        method: 'POST',
-        headers: {
+        method: 'POST', //envia los datos al backend para crear una nueva categoría
+        headers: { // Indica que los datos se envían en formato JSON
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(payload), // Convierte el objeto payload a una cadena JSON para enviarlo al backend
       });
 
       if (res.ok) {

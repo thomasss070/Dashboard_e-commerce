@@ -14,14 +14,14 @@ function Home() {
   const [mensaje, setMensaje] = useState('');
 
   useEffect(() => {
-    // Petición para obtener los productos
+    // obtener los productos
     const fetchProducts = fetch(`${API_URL}/products`).then((res) => res.json());
 
     // Petición para obtener las categorías
     const fetchCategories = fetch(`${API_URL}/categories`).then((res) => res.json());
 
     // Ejecutamos ambas peticiones en paralelo
-    Promise.all([fetchProducts, fetchCategories])
+    Promise.all([fetchProducts, fetchCategories]) // Esperamos a que ambas promesas se resuelvan
       .then(([productsData, categoriesData]) => {
         if (Array.isArray(productsData)) {
           setProductsCount(productsData.length);
@@ -44,7 +44,7 @@ function Home() {
       '¡Tu tienda lista para ti!',
       '¡Encuentra lo que buscas hoy!'
     ];
-    setMensaje(mensajes[Math.floor(Math.random() * mensajes.length)]);
+    setMensaje(mensajes[Math.floor(Math.random() * mensajes.length)]); //redondear y elije un numero 0-1
   }, []);
 
   return (

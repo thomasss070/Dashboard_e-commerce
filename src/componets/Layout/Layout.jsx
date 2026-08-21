@@ -4,16 +4,16 @@ import "./Layout.css";
 import { NavLink } from "react-router-dom";
 import { Outlet, useLocation } from "react-router-dom";
 
-function Layout({ children, user }) {
-  const location = useLocation();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+function Layout({ children, user }) { 
+  const location = useLocation();//saber en q url estas
+  const [sidebarOpen, setSidebarOpen] = useState(false);//indica si el sidebar está abierto o cerrado
 
   const closeSidebar = () => {
     setSidebarOpen(false);
   };
 
-  const getTitle = () => {
-    switch (location.pathname) {
+  const getTitle = () => { // devuelve el título de la página según la ruta actual
+    switch (location.pathname) { // location.pathname devuelve la ruta actual
       case "/":
         return `¡Hola ${user?.name || "Usuario"}!`;
       case "/products":
@@ -33,15 +33,13 @@ function Layout({ children, user }) {
 
   return (
     <div className="layout">
-
-
-      {/* Overlay mobile */}
       {sidebarOpen && (
-        <div
+       <div
           className="overlay"
           onClick={closeSidebar}
         />
       )}
+
 
       {/* Sidebar */}
       <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
@@ -62,7 +60,7 @@ function Layout({ children, user }) {
 
           <NavLink
             to="/products"
-            className={({ isActive }) =>
+            className={({ isActive }) => // permite saber que ruta es y ponerla 
               isActive ? "nav-link active" : "nav-link"
             }
             onClick={closeSidebar}
