@@ -1,0 +1,39 @@
+.category-create-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.category-preview-info {
+  margin-bottom: 20px;
+}
+
+.category-preview-info p {
+  color: #666;
+  margin-top: 5px;
+}
+
+.category-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.category-action-buttons {
+  margin-top: 20px;
+  margin-bottom: 40px;
+  display: flex;
+  gap: 10px;
+}

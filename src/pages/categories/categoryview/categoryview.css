@@ -1,3 +1,6 @@
+/* ===================================================
+   1. ESTILOS BASE Y PRINCIPALES (Tus estilos base)
+   =================================================== */
 body {
   margin: 0;
   background: #1f1f1f;
@@ -10,8 +13,16 @@ div {
   box-sizing: border-box;
 }
 
+/* CONTAINER PRINCIPAL */
+.cv-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
 /* HEADER */
-.pv-header {
+.pv-header,
+.cv-header {
   max-width: 900px;
   margin: 20px auto;
   display: flex;
@@ -19,7 +30,8 @@ div {
   align-items: center;
 }
 
-.pv-header h2 {
+.pv-header h2,
+.cv-header h2 {
   font-size: 16px;
   color: #bdbdbd;
   font-weight: 500;
@@ -28,7 +40,9 @@ div {
 
 /* CARDS DE INFORMACIÓN Y FORMULARIO */
 .product-info,
-.form {
+.cv-category-info,
+.form,
+.cv-form {
   max-width: 900px;
   margin: 15px auto;
   background: #c9c4c4;
@@ -38,25 +52,37 @@ div {
 }
 
 /* TÍTULO DE LA CATEGORÍA */
-.product-info h1 {
+.product-info h1,
+.cv-category-info h1 {
   margin: 0;
   font-size: 22px;
 }
 
+.cv-category-info p {
+  color: #4a4a4a;
+  margin-top: 5px;
+}
+
 /* FORMULARIO */
-.form {
+.form,
+.cv-form {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.form label {
+.form label,
+.cv-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
   font-size: 14px;
   font-weight: 600;
   color: rgb(62, 58, 58);
 }
 
-.form input {
+.form input,
+.cv-form-field input {
   background: #d5d5d5;
   border: 1px solid transparent;
   color: rgb(38, 35, 35);
@@ -66,12 +92,14 @@ div {
   font-size: 15px;
 }
 
-.form input:focus {
+.form input:focus,
+.cv-form-field input:focus {
   border-color: #888;
   background: #e0e0e0;
 }
 
-.form textarea {
+.form textarea,
+.cv-form-field textarea {
   background: #d5d5d5;
   border: 1px solid transparent;
   color: rgb(38, 35, 35);
@@ -79,10 +107,18 @@ div {
   border-radius: 8px;
   outline: none;
   font-size: 15px;
+  font-family: Arial, sans-serif;
+}
+
+.form textarea:focus,
+.cv-form-field textarea:focus {
+  border-color: #888;
+  background: #e0e0e0;
 }
 
 /* BOTONES DE ACCIÓN (CONTENEDOR) */
-.action-buttons {
+.action-buttons,
+.cv-action-buttons {
   max-width: 900px;
   margin: 20px auto 0 auto;
   display: flex;
@@ -90,11 +126,12 @@ div {
   gap: 10px;
 }
 
-/* ESTILO UNIFICADO PARA TODOS LOS BOTONES */
+/* ESTILO UNIFICADO PARA TODOS LOS BOTONES DEL ENCABEZADO Y FORMULARIO */
 .delete-btn,
 .action-buttons button,
 .action-buttons .save-btn,
-.action-buttons .cancel-btn {
+.action-buttons .cancel-btn,
+.cv-action-buttons button {
   background: #c9c4c4;
   color: rgb(62, 58, 58);
   border: none;
@@ -108,8 +145,117 @@ div {
 .delete-btn:hover,
 .action-buttons button:hover,
 .action-buttons .save-btn:hover,
-.action-buttons .cancel-btn:hover {
+.action-buttons .cancel-btn:hover,
+.cv-action-buttons button:hover {
   background: #b0a9a9;
   color: white;
   opacity: 1;
+}
+
+/* ===================================================
+   2. SECCIÓN DE PRODUCTOS ASOCIADOS (Adaptados al diseño)
+   =================================================== */
+
+.cv-divider {
+  max-width: 900px;
+  margin: 30px auto;
+  border: 0;
+  border-top: 1px solid #333;
+}
+
+.category-products-section {
+  max-width: 900px;
+  margin: 20px auto;
+}
+
+.category-products-section h3 {
+  color: #bdbdbd;
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+.cv-empty-text {
+  color: #888;
+  margin-top: 10px;
+}
+
+.cv-products-list {
+  list-style: none;
+  padding: 0;
+  margin: 15px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cv-product-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  background: #c9c4c4;
+  border-radius: 10px;
+  color: rgb(38, 35, 35);
+}
+
+.cv-product-item strong {
+  font-size: 15px;
+}
+
+.cv-product-price {
+  color: #4a4a4a;
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+.cv-product-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Botones dentro de la lista de productos */
+.cv-btn-edit,
+.cv-btn-remove,
+.cv-btn-delete {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.cv-btn-edit {
+  background: #d5d5d5;
+  color: rgb(38, 35, 35);
+}
+
+.cv-btn-edit:hover {
+  background: #2196F3;
+  color: white;
+}
+
+.cv-btn-remove {
+  background: #d5d5d5;
+  color: rgb(38, 35, 35);
+}
+
+.cv-btn-remove:hover {
+  background: #ff9800;
+  color: white;
+}
+
+.cv-btn-delete {
+  background: #d5d5d5;
+  color: rgb(38, 35, 35);
+}
+
+.cv-btn-delete:hover {
+  background: #f44336;
+  color: white;
 }

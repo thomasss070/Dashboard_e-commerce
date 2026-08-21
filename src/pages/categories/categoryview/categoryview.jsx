@@ -15,13 +15,11 @@ function CategoryView() {
   });
   const [products, setProducts] = useState([]);
 
-  // 1. Obtener los datos de la categoría y los productos asociados
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
 
-        // Obtener la categoría
         const resCat = await fetch(`${API_URL}/categories/${id}`);
         if (!resCat.ok) throw new Error('Categoría no encontrada');
         const catData = await resCat.json();
@@ -31,7 +29,6 @@ function CategoryView() {
           description: catData.description || catData.descripcion || '',
         });
 
-        // Obtener productos de esta categoría desde la API
         const resProds = await fetch(`${API_URL}/products?categoria_id=${id}`);
         if (resProds.ok) {
           const prodsData = await resProds.json();
@@ -59,7 +56,6 @@ function CategoryView() {
     });
   };
 
-  // 2. Función para actualizar la categoría (PUT)
   const handleSave = async () => {
     try {
       const payload = {
@@ -88,7 +84,6 @@ function CategoryView() {
     }
   };
 
-  // 3. Función para eliminar la categoría (DELETE)
   const handleDeleteCategory = async () => {
     if (!window.confirm('¿Estás seguro de que deseas eliminar esta categoría?')) return;
 
@@ -108,48 +103,41 @@ function CategoryView() {
     }
   };
 
-  // 4. Quitar el producto de la categoría (pone categoria_id en null)
-  // 4. Quitar el producto de la categoría (pone categoria_id en null)
-const handleRemoveFromCategory = async (productId) => {
-  if (!window.confirm('¿Deseas quitar este producto de me categoría?')) return;
+  const handleRemoveFromCategory = async (productId) => {
+    if (!window.confirm('¿Deseas quitar este producto de la categoría?')) return;
 
-  try {
-    const prodToUpdate = products.find((p) => (p.id || p.id_product) === productId);
-    
-    // Si prodToUpdate no existe, mostramos el aviso para saberlo
-    if (!prodToUpdate) {
-      console.error('Producto no encontrado en el estado de React');
-      return;
+    try {
+      const prodToUpdate = products.find((p) => (p.id || p.id_product) === productId);
+
+      if (!prodToUpdate) {
+        console.error('Producto no encontrado en el estado de React');
+        return;
+      }
+
+      const payload = {
+        ...prodToUpdate,
+        categoria_id: null,
+        category_id: null
+      };
+
+      const res = await fetch(`${API_URL}/products/${productId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const responseData = await res.json().catch(() => ({}));
+
+      if (res.ok) {
+        setProducts(products.filter((p) => (p.id || p.id_product) !== productId));
+      } else {
+        alert(`Error ${res.status}: ${responseData.error || 'No se pudo quitar el producto'}`);
+      }
+    } catch (error) {
+      console.error('Error de red/petición:', error);
     }
+  };
 
-    const payload = {
-      ...prodToUpdate,
-      categoria_id: null,
-      category_id: null
-    };
-
-    console.log('Enviando payload al backend:', payload);
-
-    const res = await fetch(`${API_URL}/products/${productId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-
-    const responseData = await res.json().catch(() => ({}));
-    console.log('Respuesta del Servidor (Status):', res.status, responseData);
-
-    if (res.ok) {
-      setProducts(products.filter((p) => (p.id || p.id_product) !== productId));
-    } else {
-      alert(`Error ${res.status}: ${responseData.error || 'No se pudo quitar el producto'}`);
-    }
-  } catch (error) {
-    console.error('Error de red/petición:', error);
-  }
-};
-
-  // 5. Eliminar el producto definitivamente de la base de datos
   const handleDeleteProduct = async (productId) => {
     if (!window.confirm('¿Estás seguro de eliminar completamente este producto?')) return;
 
@@ -169,13 +157,13 @@ const handleRemoveFromCategory = async (productId) => {
   };
 
   if (loading) {
-    return <h2 style={{ padding: '20px' }}>Cargando categoría...</h2>;
+    return <h2 className="cv-container">Cargando categoría...</h2>;
   }
 
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+    <div className="cv-container">
       {/* ENCABEZADO */}
-      <div className="pv-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="pv-header cv-header">
         <h2>Categorías &gt; #{id}</h2>
 
         <button className="delete-btn" onClick={handleDeleteCategory}>
@@ -184,16 +172,14 @@ const handleRemoveFromCategory = async (productId) => {
       </div>
 
       {/* INFORMACIÓN DE LA CATEGORÍA */}
-      <div className="product-info" style={{ marginBottom: '20px' }}>
+      <div className="product-info cv-category-info">
         <h1>{formData.name || 'Sin Nombre'}</h1>
-        <p style={{ color: '#666', marginTop: '5px' }}>
-          {formData.description || 'Sin descripción'}
-        </p>
+        <p>{formData.description || 'Sin descripción'}</p>
       </div>
 
       {/* FORMULARIO DE EDICIÓN */}
-      <div className="form" style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        <label style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+      <div className="form cv-form">
+        <label className="cv-form-field">
           <strong>Nombre de la Categoría:</strong>
           <input
             name="name"
@@ -203,7 +189,7 @@ const handleRemoveFromCategory = async (productId) => {
           />
         </label>
 
-        <label style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+        <label className="cv-form-field">
           <strong>Descripción:</strong>
           <textarea
             name="description"
@@ -216,7 +202,7 @@ const handleRemoveFromCategory = async (productId) => {
       </div>
 
       {/* BOTONES DE ACCIÓN DE LA CATEGORÍA */}
-      <div className="action-buttons" style={{ marginTop: '20px', marginBottom: '40px' }}>
+      <div className="action-buttons cv-action-buttons">
         <button className="save-btn" onClick={handleSave}>
           Guardar Cambios
         </button>
@@ -225,82 +211,47 @@ const handleRemoveFromCategory = async (productId) => {
         </button>
       </div>
 
-      <hr style={{ margin: '30px 0' }} />
+      <hr className="cv-divider" />
 
       {/* SECCIÓN DE PRODUCTOS ASOCIADOS */}
       <div className="category-products-section">
         <h3>Productos en esta categoría ({products.length})</h3>
 
         {products.length === 0 ? (
-          <p style={{ color: '#777', marginTop: '10px' }}>No hay productos asociados a esta categoría.</p>
+          <p className="cv-empty-text">No hay productos asociados a esta categoría.</p>
         ) : (
-          <ul style={{ listStyle: 'none', padding: 0, marginTop: '15px' }}>
-            {products.map((prod) => (
-              <li
-                key={prod.id}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '12px 15px',
-                  border: '1px solid #ddd',
-                  borderRadius: '6px',
-                  marginBottom: '10px',
-                  backgroundColor: '#fff',
-                }}
-              >
-                <div>
-                  <strong>{prod.nombre || prod.name}</strong>
-                  {prod.precio && <span style={{ color: '#555', marginLeft: '10px' }}>${prod.precio}</span>}
-                </div>
+          <ul className="cv-products-list">
+            {products.map((prod) => {
+              const productId = prod.id || prod.id_product;
+              return (
+                <li key={productId} className="cv-product-item">
+                  <div>
+                    <strong>{prod.nombre || prod.name}</strong>
+                    {prod.precio && <span className="cv-product-price">${prod.precio}</span>}
+                  </div>
 
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <Link
-                    to={`/products/${prod.id}`}
-                    style={{
-                      padding: '5px 10px',
-                      backgroundColor: '#2196F3',
-                      color: 'white',
-                      borderRadius: '4px',
-                      textDecoration: 'none',
-                      fontSize: '0.85rem',
-                    }}
-                  >
-                    Ver / Editar
-                  </Link>
+                  <div className="cv-product-actions">
+                    <Link to={`/products/${productId}`} className="cv-btn-edit">
+                      Ver / Editar
+                    </Link>
 
-                  <button
-                    onClick={() => handleRemoveFromCategory(prod.id)}
-                    style={{
-                      padding: '5px 10px',
-                      backgroundColor: '#ff9800',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      fontSize: '0.85rem',
-                    }}
-                  >
-                    Quitar de categoría
-                  </button>
+                    <button
+                      onClick={() => handleRemoveFromCategory(productId)}
+                      className="cv-btn-remove"
+                    >
+                      Quitar de categoría
+                    </button>
 
-                  <button
-                    onClick={() => handleDeleteProduct(prod.id)}
-                    style={{
-                      padding: '5px 10px',
-                      backgroundColor: '#f44336',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      fontSize: '0.85rem',
-                    }}
-                  >
-                    Eliminar
-                  </button>
-                </div>
-              </li>
-            ))}
+                    <button
+                      onClick={() => handleDeleteProduct(productId)}
+                      className="cv-btn-delete"
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>

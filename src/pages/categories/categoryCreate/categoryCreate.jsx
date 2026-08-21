@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../categoryView/categoryview.css';
+import './CategoryCreate.css'; // Estilos específicos del formulario
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -20,7 +21,6 @@ function CategoryCreate() {
     });
   };
 
-  // Función para crear la categoría (POST)
   const handleSave = async (e) => {
     e.preventDefault();
 
@@ -63,24 +63,22 @@ function CategoryCreate() {
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+    <div className="category-create-container">
       {/* ENCABEZADO */}
-      <div className="pv-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="pv-header category-header">
         <h2>Categorías &gt; Nueva Categoría</h2>
       </div>
 
       {/* INFORMACIÓN DE PREVISUALIZACIÓN */}
-      <div className="product-info" style={{ marginBottom: '20px' }}>
+      <div className="product-info category-preview-info">
         <h1>{formData.name || 'Nueva Categoría'}</h1>
-        <p style={{ color: '#666', marginTop: '5px' }}>
-          {formData.description || 'Ingresa los detalles a continuación'}
-        </p>
+        <p>{formData.description || 'Ingresa los detalles a continuación'}</p>
       </div>
 
       {/* FORMULARIO DE CREACIÓN */}
       <form onSubmit={handleSave}>
-        <div className="form" style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-          <label style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+        <div className="form category-form">
+          <label className="form-field">
             <strong>Nombre de la Categoría:</strong>
             <input
               type="text"
@@ -92,7 +90,7 @@ function CategoryCreate() {
             />
           </label>
 
-          <label style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+          <label className="form-field">
             <strong>Descripción:</strong>
             <textarea
               name="description"
@@ -105,7 +103,7 @@ function CategoryCreate() {
         </div>
 
         {/* BOTONES DE ACCIÓN */}
-        <div className="action-buttons" style={{ marginTop: '20px', marginBottom: '40px' }}>
+        <div className="action-buttons category-action-buttons">
           <button 
             type="submit" 
             className="save-btn" 
