@@ -117,10 +117,10 @@ function ProductsCreate() {
         </button>
       </div>
 
-      {error && <p style={{ color: 'red', marginBottom: '15px' }}>{error}</p>}
+      {error && <p>{error}</p>}
 
       <form className="form" onSubmit={handleSubmit}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxWidth: '500px' }}>
+        <div >
           
           <label>
             <strong>Nombre del producto:</strong>
@@ -225,7 +225,7 @@ function ProductsCreate() {
             />
           </label>
 
-          <div className="action-buttons" style={{ marginTop: '20px' }}>
+          <div className="action-buttons" >
             <button type="submit" className="save-btn" disabled={loading}>
               {loading ? 'Guardando...' : 'Crear Producto'}
             </button>

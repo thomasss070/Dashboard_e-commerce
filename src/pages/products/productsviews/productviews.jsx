@@ -24,74 +24,75 @@ function ProductView() {
     flag: ''
   });
 
-  // 2. Cargar lista de categorías disponibles
-  useEffect(() => {
-    fetch(`${API_URL}/categories`)
-      .then((res) => {
-        if (!res.ok) throw new Error('Error al obtener categorías');
-        return res.json();
-      })
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setCategorias(data);
-        } else {
-          setCategorias([]);
-        }
-      })
-      .catch((err) => {
-        console.error('Error cargando categorías:', err);
-        setCategorias([]);
-      });
-  }, []);
+ // 2. Cargar lista de categorías disponibles
+useEffect(() => {
+  const fetchCategorias = async () => {
+    try {
+      const res = await fetch(`${API_URL}/categories`);
+      if (!res.ok) throw new Error('Error al obtener categorías');
+      
+      const data = await res.json();
+      setCategorias(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error('Error cargando categorías:', err);
+      setCategorias([]);
+    }
+  };
 
-  // 3. Cargar los datos del producto
-  useEffect(() => {
-    fetch(`${API_URL}/products/${id}`)
-      .then((res) => {
-        if (!res.ok) throw new Error('Producto no encontrado');
-        return res.json();
-      })
-      .then((data) => {
-        let specsText = '';
+  fetchCategorias();
+}, []);
 
-        if (typeof data.especificaciones === 'object' && data.especificaciones !== null) {
-          specsText = Object.entries(data.especificaciones)
+// 3. Cargar los datos del producto
+useEffect(() => {
+  const fetchProducto = async () => {
+    try {
+      const res = await fetch(`${API_URL}/products/${id}`);
+      if (!res.ok) throw new Error('Producto no encontrado');
+
+      const data = await res.json();
+      let specsText = '';
+
+      // Procesamiento de las especificaciones
+      if (typeof data.especificaciones === 'object' && data.especificaciones !== null) {
+        specsText = Object.entries(data.especificaciones)
+          .map(([key, val]) => `${key}: ${val}`)
+          .join('\n');
+      } else if (typeof data.especificaciones === 'string' && data.especificaciones.trim().startsWith('{')) {
+        try {
+          const parsed = JSON.parse(data.especificaciones);
+          specsText = Object.entries(parsed)
             .map(([key, val]) => `${key}: ${val}`)
             .join('\n');
-        } else if (typeof data.especificaciones === 'string' && data.especificaciones.trim().startsWith('{')) {
-          try {
-            const parsed = JSON.parse(data.especificaciones);
-            specsText = Object.entries(parsed)
-              .map(([key, val]) => `${key}: ${val}`)
-              .join('\n');
-          } catch (e) {
-            specsText = data.especificaciones;
-          }
-        } else {
-          specsText = data.especificaciones || '';
+        } catch (e) {
+          specsText = data.especificaciones;
         }
+      } else {
+        specsText = data.especificaciones || '';
+      }
 
-        // Extraer ID de categoría limpiando decimales como "999.0"
-        const rawCat = data.categoria_id ?? data.category_id ?? data.categoria;
-        const cleanCatId = rawCat !== undefined && rawCat !== null && rawCat !== '' ? parseInt(rawCat, 10) : '';
+      // Extraer ID de categoría limpiando decimales como "999.0"
+      const rawCat = data.categoria_id ?? data.category_id ?? data.categoria;
+      const cleanCatId = rawCat !== undefined && rawCat !== null && rawCat !== '' ? parseInt(rawCat, 10) : '';
 
-        setFormData({
-          nombre: data.nombre || data.name || '',
-          precio: data.precio || data.price || 0,
-          stock: data.stock || 0,
-          descripcion: data.descripcion || data.description || '',
-          imagen: data.imagen || '',
-          especificaciones: specsText,
-          categoria_id: cleanCatId !== '' && !isNaN(cleanCatId) ? String(cleanCatId) : '',
-          flag: data.flag || ''
-        });
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Error al cargar el producto:', err);
-        setLoading(false);
+      setFormData({
+        nombre: data.nombre || data.name || '',
+        precio: data.precio || data.price || 0,
+        stock: data.stock || 0,
+        descripcion: data.descripcion || data.description || '',
+        imagen: data.imagen || '',
+        especificaciones: specsText,
+        categoria_id: cleanCatId !== '' && !isNaN(cleanCatId) ? String(cleanCatId) : '',
+        flag: data.flag || ''
       });
-  }, [id]);
+    } catch (err) {
+      console.error('Error al cargar el producto:', err);
+    } finally {
+      setLoading(false); // Se ejecuta siempre al terminar la petición (haya o no error)
+    }
+  };
+
+  fetchProducto();
+}, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

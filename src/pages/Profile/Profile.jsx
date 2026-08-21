@@ -32,7 +32,6 @@ export default function Users() {
   };
 
   // Ver detalles de un usuario
-
   const handleViewDetails = async (id) => {
     try {
       const res = await fetch(`${API_URL}/${id}`);
@@ -97,7 +96,6 @@ export default function Users() {
       role: "Cliente",
     });
   };
-
 
   // Eliminar un usuario
   

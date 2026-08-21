@@ -16,25 +16,30 @@ function ProductsList() {
 
   // Obtiene los productos reales cuando el componente se monta
   useEffect(() => {
-    fetch(`${API_URL}/products`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Error al obtener los productos");
-        return res.json();
-      })
-      .then((data) => {
-        setProducts(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error al obtener los productos:", err);
-        setLoading(false);
-      });
-  }, []);
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch(`${API_URL}/products`);
+      
+      if (!res.ok) {
+        throw new Error("Error al obtener los productos");
+      }
+      
+      const data = await res.json();
+      setProducts(data);
+    } catch (err) {
+      console.error("Error al obtener los productos:", err);
+    } finally {
+      setLoading(false); // Se ejecuta siempre, haya error o no
+    }
+  };
+
+  fetchProducts();
+}, []);
 
   const filteredProducts = products.filter(
     (product) =>
-      product.nombre.toLowerCase().includes(search.toLowerCase()) ||
-      (product.categoria && product.categoria.toLowerCase().includes(search.toLowerCase()))
+      product.nombre.toLowerCase().includes(search.toLowerCase()) || 
+    (product.categoria && product.categoria.toLowerCase().includes(search.toLowerCase()))
   );
 
   return (
